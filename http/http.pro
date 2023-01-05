@@ -1,7 +1,9 @@
 QT += network widgets httpserver
 
-HEADERS += httpwindow.h
+HEADERS += httpwindow.h \
+    idnamebody.h
 SOURCES += httpwindow.cpp \
+           idnamebody.cpp \
            main.cpp
 FORMS += authenticationdialog.ui
 

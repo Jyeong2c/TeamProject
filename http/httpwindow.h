@@ -22,6 +22,8 @@ class QCheckBox;
 
 QT_END_NAMESPACE
 
+class IdNameBody;
+
 class ProgressDialog : public QProgressDialog {
     Q_OBJECT
 

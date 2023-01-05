@@ -1,44 +1,20 @@
 #include "widget.h"
 #include "ui_widget.h"
-using namespace std;
-//임의의 구조체 선언
-struct IdNameBody
-{
-    int id;
-    QString name;
-    QString body;
-    IdNameBody(int _id, QString _name, QString _body)
-    {
-        id = _id;
-        name = _name;
-        body = _body;
-    }
-};
 
-//void CreateJson(const QString &path);
-//void ReadJson(const QString &path);
+using namespace std;
 
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    ui->UrlLineEdit->setText(QString("D:/HTTPQt/Htmlzip/test.html"));
+    ui->UrlLineEdit->setText(QString("D:/HTTPQt/Htmlzip/test2.html"));
 
-//    connect(ui->horizontalSlider, &QSlider::sliderMoved, this, [=]{
-//        int val = ui->horizontalSlider->value();
-//        ui->urlAllData->setText(QString::number(val));
-//    });
-
-//    connect(ui->urlAllData, &QLineEdit::textChanged, this, [=]{
-//        int val = ui->urlAllData->text().toInt();
-//        ui->horizontalSlider->setValue(val);
-//    });
-
+    /*D 드라이브에 다운로드된 HTML문서를 링킹*/
     QString Link = ui->UrlLineEdit->text().toUtf8();
 
 
-    //JsonParsingTable 초기화 이후 ID, Name, Body 헤더 표시
+    /*JsonParsingTable 초기화 이후 ID, Name, Body 헤더 표시*/
     ui->JsonPasingTable->clear();
     QTreeWidgetItem* header = new QTreeWidgetItem;
 
@@ -48,8 +24,7 @@ Widget::Widget(QWidget *parent)
 
     ui->JsonPasingTable->setHeaderItem(header);
 
-    //테이블 컬럼 자동 조정
-
+    /*TreeView column 조정 중*/
     ui->JsonPasingTable->header()->setStretchLastSection(true);
     ui->JsonPasingTable->header()->setCascadingSectionResizes(true);
 
