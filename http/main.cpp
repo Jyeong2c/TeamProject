@@ -21,7 +21,7 @@ class IdNameBody;
 int main(int argc, char *argv[])
 {
     /* json/text/ini 파일 생성(현재는 json 형태의 파일을 생성)*/
-    QString path = "D:/HTTPQt/Htmlzip/test.json";   //json파일 인코딩
+    QString path = "D:/GitDesktop/TeamProject/JsonHttp/test.json";   //json파일 인코딩
     IdNameBody INB;
     INB.CreateJson(path);
 

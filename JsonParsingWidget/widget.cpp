@@ -8,7 +8,7 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
-    ui->UrlLineEdit->setText(QString("D:/HTTPQt/Htmlzip/test2.html"));
+    ui->UrlLineEdit->setText(QString("D:/GitDesktop/TeamProject/JsonHttp/test.html"));
 
     /*D 드라이브에 다운로드된 HTML문서를 링킹*/
     QString Link = ui->UrlLineEdit->text().toUtf8();
