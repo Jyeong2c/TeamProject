@@ -23,6 +23,7 @@ class QCheckBox;
 QT_END_NAMESPACE
 
 class IdNameBody;
+class TCPServerDlg;
 
 class ProgressDialog : public QProgressDialog {
     Q_OBJECT
@@ -61,6 +62,7 @@ private slots:
     void on_fileDialogButton_clicked();
 
 
+    /**/
 #if QT_CONFIG(ssl)
     void sslErrors(const QList<QSslError> &errors);
 #endif
@@ -72,6 +74,7 @@ private:
     QLineEdit *urlLineEdit;
     QPushButton *downloadButton;
     QPushButton *fileDialogButton;
+    QPushButton *newServerBrowserButton;
     QCheckBox *launchCheckBox;
     QLineEdit *defaultFileLineEdit;
     QLineEdit *downloadDirectoryLineEdit;
@@ -82,7 +85,7 @@ private:
     std::unique_ptr<QFile> file;
     bool httpRequestAborted = false;
 
-
+    TCPServerDlg *tcpServer;
 };
 
 #endif

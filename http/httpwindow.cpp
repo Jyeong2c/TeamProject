@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 #include "httpwindow.h"
-
+#include "tcpserverdlg.h"
 #include "ui_authenticationdialog.h"
 
 #include <QtWidgets>
@@ -49,6 +49,7 @@ HttpWindow::HttpWindow(QWidget *parent)
     , urlLineEdit(new QLineEdit(defaultUrl))
     , downloadButton(new QPushButton(tr("Download")))
     , fileDialogButton(new QPushButton(tr("fileDialog")))   //파일다이얼로그 버튼을 띄우기 위한 변수 초기화
+    , newServerBrowserButton(new QPushButton(tr("ServerBrowser")))
     , launchCheckBox(new QCheckBox("Launch file"))
     , defaultFileLineEdit(new QLineEdit(defaultFileName))
     , downloadDirectoryLineEdit(new QLineEdit)
@@ -102,13 +103,24 @@ HttpWindow::HttpWindow(QWidget *parent)
     downloadButton->setDefault(true);
     connect(downloadButton, &QAbstractButton::clicked, this, &HttpWindow::downloadFile);
 
+    /*server browser를 호출하는 버튼 에디트*/
+    newServerBrowserButton->setEnabled(true);
+    connect(newServerBrowserButton, &QAbstractButton::clicked, [=]{
+        tcpServer = new TCPServerDlg;
+        tcpServer->setModal(true);
+        tcpServer->exec();
+    });
+
     /*UI 우측하단의 두개의 버튼을 레이아웃을 표시*/
     QPushButton *quitButton = new QPushButton(tr("Quit"));
     quitButton->setAutoDefault(false);
     connect(quitButton, &QAbstractButton::clicked, this, &QWidget::close);
+
+    /*버튼 박스안의 3가지 버튼을 구현*/
     QDialogButtonBox *buttonBox = new QDialogButtonBox;
     buttonBox->addButton(downloadButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(quitButton, QDialogButtonBox::RejectRole);
+    buttonBox->addButton(newServerBrowserButton, QDialogButtonBox::RejectRole); //Server Browser를 여는 버튼
     mainLayout->addWidget(buttonBox);
 
     urlLineEdit->setFocus();
