@@ -14,7 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(server, SIGNAL(newConnection()), this, SLOT(newConnection()));
 
     QString socket_data;
-    socket_data = QString("Listening : %1\n").arg(server->listen(QHostAddress::Any, 1024) ? "true" : "false");
+    socket_data = QString("Listening : %1\n").arg(server->listen(QHostAddress::Any, PORT_NUMBER) ? "true" : "false");
     ui->textBrowser->insertPlainText(socket_data);
 }
 
