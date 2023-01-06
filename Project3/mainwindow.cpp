@@ -8,12 +8,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
 
 
-
-
     client = new ClientForm;
-    QTabWidget *tab = new QTabWidget;
 
-//    client->loadData();
+    client->loadData();
 
     QMdiSubWindow * cw = ui->mdiArea->addSubWindow(client);
     ui->mdiArea->setActiveSubWindow(cw);
