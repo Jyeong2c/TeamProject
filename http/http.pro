@@ -1,11 +1,17 @@
 QT += network widgets httpserver
 
 HEADERS += httpwindow.h \
-    idnamebody.h
+    idnamebody.h \
+    #tcpserver.h \
+    tcpserverdlg.h
 SOURCES += httpwindow.cpp \
            idnamebody.cpp \
-           main.cpp
-FORMS += authenticationdialog.ui
+           main.cpp \
+           #tcpserver.cpp \
+           tcpserverdlg.cpp
+FORMS += authenticationdialog.ui \
+    #tcpserver.ui \
+    tcpserverdlg.ui
 
 # install
 target.path = $$[QT_INSTALL_EXAMPLES]/network/http

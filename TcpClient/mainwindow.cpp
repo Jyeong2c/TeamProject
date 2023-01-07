@@ -24,7 +24,7 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-
+/*server에 보내는 데이터를 출력하기 위한 함수*/
 void MainWindow::on_pushButton_clicked()
 {
     if(fd_flag)
@@ -32,8 +32,8 @@ void MainWindow::on_pushButton_clicked()
 //        QString status = QString("Processing file %1 of %2: %3")
 //                        .arg(i).arg(total).arg(fileName);@
         QString textData, sendData;
-        textData = QString("Button click : %1").arg(cnt);
-        sendData = QString("Socket data : %1").arg(cnt);
+        textData = QString("Button click : %1\n").arg(cnt);
+        sendData = QString("Socket data : %1\n").arg(cnt);
 
         ui->textBrowser->insertPlainText(textData);
         send_flag = writeData(sendData.toStdString().c_str());

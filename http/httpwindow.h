@@ -19,10 +19,12 @@ class QSslError;
 class QAuthenticator;
 class QNetworkReply;
 class QCheckBox;
+class QTabWidget;
 
 QT_END_NAMESPACE
 
 class IdNameBody;
+class TCPServerDlg;
 
 class ProgressDialog : public QProgressDialog {
     Q_OBJECT
@@ -61,6 +63,7 @@ private slots:
     void on_fileDialogButton_clicked();
 
 
+    /**/
 #if QT_CONFIG(ssl)
     void sslErrors(const QList<QSslError> &errors);
 #endif
@@ -71,10 +74,14 @@ private:
     QLabel *statusLabel;
     QLineEdit *urlLineEdit;
     QPushButton *downloadButton;
-    QPushButton *fileDialogButton;
+    QPushButton *fileDialogButton;          //파일 다이얼로그를 호출하는 변수
+    QPushButton *newServerBrowserButton;
     QCheckBox *launchCheckBox;
     QLineEdit *defaultFileLineEdit;
     QLineEdit *downloadDirectoryLineEdit;
+
+    /*http 다운로드 위젯과 TCP 서버를 탭으로 나눔*/
+    QTabWidget *tabWidget;
 
     QUrl url;
     QNetworkAccessManager qnam;
@@ -82,7 +89,7 @@ private:
     std::unique_ptr<QFile> file;
     bool httpRequestAborted = false;
 
-
+    TCPServerDlg *tcpServer;
 };
 
 #endif

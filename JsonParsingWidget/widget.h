@@ -31,7 +31,20 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
+public slots:
+    bool connectToHost(QString host);
+    bool writeData(QByteArray data);
+
+private slots:
+    void on_SelectSend_clicked();
+
 private:
     Ui::Widget *ui;
+    QTcpSocket *socket;
+
+    bool fd_flag = false;
+    bool send_flag = false;
+    const int PORT_NUMBER = 1024;
+    int cnt = 0;
 };
 #endif // WIDGET_H

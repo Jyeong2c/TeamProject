@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: LicenseRef-Qt-Commercial OR BSD-3-Clause
 
 #include "httpwindow.h"
-
+#include "tcpserverdlg.h"
 #include "ui_authenticationdialog.h"
 
 #include <QtWidgets>
@@ -49,12 +49,13 @@ HttpWindow::HttpWindow(QWidget *parent)
     , urlLineEdit(new QLineEdit(defaultUrl))
     , downloadButton(new QPushButton(tr("Download")))
     , fileDialogButton(new QPushButton(tr("fileDialog")))   //파일다이얼로그 버튼을 띄우기 위한 변수 초기화
+    , newServerBrowserButton(new QPushButton(tr("ServerBrowser")))
     , launchCheckBox(new QCheckBox("Launch file"))
     , defaultFileLineEdit(new QLineEdit(defaultFileName))
     , downloadDirectoryLineEdit(new QLineEdit)
+    , tabWidget(new QTabWidget)
 {
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-
     setWindowFlags(windowFlags() & ~Qt::WindowContextHelpButtonHint);
     setWindowTitle(tr("HTTP"));
 
@@ -62,6 +63,7 @@ HttpWindow::HttpWindow(QWidget *parent)
     connect(&qnam, &QNetworkAccessManager::authenticationRequired,
             this, &HttpWindow::slotAuthenticationRequired);
     //! [qnam-auth-required-1]
+
 
     QFormLayout *formLayout = new QFormLayout;      //UI 구성을 위한 폼 레이아웃
     urlLineEdit->setClearButtonEnabled(true);
@@ -86,7 +88,7 @@ HttpWindow::HttpWindow(QWidget *parent)
     formLayout->addRow(tr("Download directort:"), hlayout);
     formLayout->addRow(tr("Default &file:"), defaultFileLineEdit);
 
-
+    /*다운로드 여부를 묻는 체크박스 생성*/
     launchCheckBox->setChecked(true);
     formLayout->addRow(launchCheckBox);
 
@@ -102,16 +104,26 @@ HttpWindow::HttpWindow(QWidget *parent)
     downloadButton->setDefault(true);
     connect(downloadButton, &QAbstractButton::clicked, this, &HttpWindow::downloadFile);
 
+
+
     /*UI 우측하단의 두개의 버튼을 레이아웃을 표시*/
     QPushButton *quitButton = new QPushButton(tr("Quit"));
     quitButton->setAutoDefault(false);
     connect(quitButton, &QAbstractButton::clicked, this, &QWidget::close);
+
+    /*버튼 박스안의 3가지 버튼을 구현*/
     QDialogButtonBox *buttonBox = new QDialogButtonBox;
     buttonBox->addButton(downloadButton, QDialogButtonBox::ActionRole);
     buttonBox->addButton(quitButton, QDialogButtonBox::RejectRole);
     mainLayout->addWidget(buttonBox);
 
+    /*url 라인 에디트에 포커스 맞추기*/
     urlLineEdit->setFocus();
+
+    /*서버 다이얼로그 활성화*/
+    tcpServer = new TCPServerDlg;
+    tabWidget->addTab(tcpServer, "TCPServerDlg");
+    mainLayout->addWidget(tabWidget);
 }
 HttpWindow::~HttpWindow() = default;
 
@@ -135,12 +147,18 @@ void HttpWindow::startRequest(const QUrl &requestedUrl)
 #endif
     //! [connecting-reply-to-slots]
 
-    //프로그래스바가 100%로 채워지면 다운로드를 완료하는 과정을 표시
+    /*프로그래스바가 100%로 채워지면 다운로드를 완료하는 과정을 표시*/
     ProgressDialog *progressDialog = new ProgressDialog(url, this);
     progressDialog->setAttribute(Qt::WA_DeleteOnClose);
+
+    /*다운로드 중간에 취소를 요청시 취소하는 알람을 제공한는 커넥트 함수*/
     connect(progressDialog, &QProgressDialog::canceled, this, &HttpWindow::cancelDownload);
+
+    /**/
     connect(reply.get(), &QNetworkReply::downloadProgress,
             progressDialog, &ProgressDialog::networkReplyProgress);
+
+    /*html 다운로드를 완료하면 프로그래스바 숨기기*/
     connect(reply.get(), &QNetworkReply::finished, progressDialog, &ProgressDialog::hide);
     progressDialog->show();
 
@@ -151,55 +169,59 @@ void HttpWindow::startRequest(const QUrl &requestedUrl)
 /*다운로드 파일 상태를 출력하는 함수*/
 void HttpWindow::downloadFile()
 {
-    /*urlSpec 정보를 나타내는 변수*/
-    const QString urlSpec = urlLineEdit->text().trimmed(); //시작과 끝에서 공백이 제거된 문자열을 반환합니다.
-    if (urlSpec.isEmpty())      //데이터 정보가 없다면 downloadFile함수를 나옴
-        return;
+        /*urlSpec 정보를 나타내는 변수*/
+        const QString urlSpec = urlLineEdit->text().trimmed(); //시작과 끝에서 공백이 제거된 문자열을 반환합니다.
+        if (urlSpec.isEmpty())      //데이터 정보가 없다면 downloadFile함수를 나옴
+            return;
 
-    const QUrl newUrl = QUrl::fromUserInput(urlSpec);
-    if (!newUrl.isValid()) {
-        QMessageBox::information(this, tr("Error"),
-                                 tr("Invalid URL: %1: %2").arg(urlSpec, newUrl.errorString()));
-        return;
-    }
-
-    QString fileName = newUrl.fileName();
-    if (fileName.isEmpty())
-        fileName = defaultFileLineEdit->text().trimmed();
-    if (fileName.isEmpty())
-        fileName = defaultFileName;
-    QString downloadDirectory = QDir::cleanPath(downloadDirectoryLineEdit->text().trimmed());
-    bool useDirectory = !downloadDirectory.isEmpty() && QFileInfo(downloadDirectory).isDir();
-    if (useDirectory)
-        fileName.prepend(downloadDirectory + '/');
-    if (QFile::exists(fileName)) {
-        if (QMessageBox::question(this, tr("Overwrite Existing File"),
-                                  tr("There already exists a file called %1%2."
-                                     " Overwrite?")
-                                  .arg(fileName,
-                                       useDirectory
-                                       ? QString()
-                                       : QStringLiteral(" in the current directory")),
-                                  QMessageBox::Yes | QMessageBox::No,
-                                  QMessageBox::No)
-                == QMessageBox::No) {
+        /*해당하는 Url 정보가 없을 때 Error 상태임을 나타내는 메세지를 보여줌*/
+        const QUrl newUrl = QUrl::fromUserInput(urlSpec);
+        if (!newUrl.isValid()) {
+            QMessageBox::information(this, tr("Error"),
+                                     tr("Invalid URL: %1: %2").arg(urlSpec, newUrl.errorString()));
             return;
         }
-        QFile::remove(fileName);
-    }
 
-    file = openFileForWrite(fileName);
-    if (!file)
-        return;
+        /*새로운 URL을 생성하면 그 이름에 맞는 URL로 저장*/
+        QString fileName = newUrl.fileName();
+        if (fileName.isEmpty())
+            fileName = defaultFileLineEdit->text().trimmed();
+        if (fileName.isEmpty())
+            fileName = defaultFileName;
 
-    downloadButton->setEnabled(false);
+        /*다운로드한 디렉토리의 경로를 자동으로 지정??*/
+        QString downloadDirectory = QDir::cleanPath(downloadDirectoryLineEdit->text().trimmed());
+        bool useDirectory = !downloadDirectory.isEmpty() && QFileInfo(downloadDirectory).isDir();
+        if (useDirectory)
+            fileName.prepend(downloadDirectory + '/');
+        if (QFile::exists(fileName)) {
+            if (QMessageBox::question(this, tr("Overwrite Existing File"),
+                                      tr("There already exists a file called %1%2."
+                                         " Overwrite?")
+                                      .arg(fileName,
+                                           useDirectory
+                                           ? QString()
+                                           : QStringLiteral(" in the current directory")),
+                                      QMessageBox::Yes | QMessageBox::No,
+                                      QMessageBox::No)
+                    == QMessageBox::No) {
+                return;
+            }
+            QFile::remove(fileName);
+        }
 
-    // schedule the request
-    startRequest(newUrl);
+        file = openFileForWrite(fileName);
+        if (!file)
+            return;
+
+        downloadButton->setEnabled(false);
+
+        // schedule the request
+        startRequest(newUrl);
 }
 
 
-//스마트 포인터를 이용하여 파일 쓰기위한 open함수 구현
+/*스마트 포인터를 이용하여 파일 쓰기위한 open함수 구현*/
 std::unique_ptr<QFile> HttpWindow::openFileForWrite(const QString &fileName)
 {
     std::unique_ptr<QFile> file = std::make_unique<QFile>(fileName);
@@ -213,17 +235,21 @@ std::unique_ptr<QFile> HttpWindow::openFileForWrite(const QString &fileName)
     return file;
 }
 
-void HttpWindow::cancelDownload() //다운로드 중에 취소
+/*프로그래스로 다운로드 상태를 알리다가 취소하는 경우 나타내는 슬롯 함수*/
+void HttpWindow::cancelDownload()
 {
     statusLabel->setText(tr("Download canceled."));
     httpRequestAborted = true;
-    reply->abort();
+    reply->abort();     //abort() : 작업을 즉시 중단하고 아직 열려 있는 모든 네트워크 연결을 닫습니다.
+                        //          아직 진행 중인 업로드도 중단됩니다.
     downloadButton->setEnabled(true);
 }
 
 void HttpWindow::httpFinished() //Http 다운로드 완료여부 메시지를 출력하는 함수
 {
+    /*파일의 정보 변수 fi*/
     QFileInfo fi;
+
     if (file) {
         fi.setFile(file->fileName());
         file->close();
@@ -247,6 +273,7 @@ void HttpWindow::httpFinished() //Http 다운로드 완료여부 메시지를 �
     }
     //! [networkreply-error-handling-2]
 
+    /*스테이터스 레이블에 파일의 바이트 수만큼 지정된 폴더에 다운되었음을 알림*/
     statusLabel->setText(tr("Downloaded %1 bytes to %2\nin\n%3")
                          .arg(fi.size())
                          .arg(fi.fileName(), QDir::toNativeSeparators(fi.absolutePath())));
@@ -272,6 +299,7 @@ void HttpWindow::enableDownloadButton()     //url 경로가 활성화 될때, �
     downloadButton->setEnabled(!urlLineEdit->text().isEmpty());
 }
 
+/*ssl로 접속했을 때의 UI로 전환*/
 //! [qnam-auth-required-2]
 void HttpWindow::slotAuthenticationRequired(QNetworkReply *, QAuthenticator *authenticator)
 {
@@ -283,6 +311,7 @@ void HttpWindow::slotAuthenticationRequired(QNetworkReply *, QAuthenticator *aut
 
     // Did the URL have information? Fill the UI.
     // This is only relevant if the URL-supplied credentials were wrong
+    /*아이디와 패스워드 요구*/
     ui.userEdit->setText(url.userName());
     ui.passwordEdit->setText(url.password());
 
@@ -322,3 +351,5 @@ void HttpWindow::on_fileDialogButton_clicked()
                                                     QFileDialog::ShowDirsOnly);
     downloadDirectoryLineEdit->setText(dir);
 }
+
+
