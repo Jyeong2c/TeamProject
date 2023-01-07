@@ -27,7 +27,7 @@
    <item row="0" column="2" colspan="2">
     <widget class="QPushButton" name="connectButton">
      <property name="text">
-      <string>Connect</string>
+      <string>Parsing</string>
      </property>
     </widget>
    </item>

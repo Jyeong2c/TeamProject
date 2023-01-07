@@ -2,6 +2,8 @@
 #include "ui_widget.h"
 
 using namespace std;
+/*내일은 지정된 서버에서 파일을 보내는 방법을 강구 해봐함*/
+/*서버에서 JSON데이터를 사용하는데 ui로 데이터를 생성해보는 연구 필요*/
 
 static inline QByteArray IntToArray(qint32 source); //정수형을 문자열로 바꾸는 인라인 함수
 
@@ -153,6 +155,13 @@ void Widget::on_SelectSend_clicked()
     qDebug("[%s] %s : %d", __FILE__, __FUNCTION__, __LINE__);
 
     QList<QTreeWidgetItem*> selectedItemList = ui->JsonPasingTable->selectedItems();
+
+    /*트리뷰위젯의 아이템을 선택하지 않고 버튼을 눌렀을때의 예외처리*/
+    if(selectedItemList.isEmpty())
+    {
+        return;
+    }
+
     if(selectedItemList.length() == 0)      //아이템이 선택되지 않았으면
     {
         ui->JsonPasingTable->topLevelItem(ui->JsonPasingTable->topLevelItemCount() - 1)->setSelected(true);
