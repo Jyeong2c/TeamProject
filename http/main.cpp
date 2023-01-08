@@ -90,7 +90,6 @@ int main(int argc, char *argv[])
         return std::move(resp);
     });
 
-
     //생성하는 서버는 번호를 따로 만들어서 메인문에 생성
     const auto port = httpServer.listen(QHostAddress::Any, 8001);
     if (!port) {
@@ -101,7 +100,7 @@ int main(int argc, char *argv[])
 
     //emit SIGNAL(port);
     qDebug() << QCoreApplication::translate(
-                    "QHttpServerExample", "(main)Running on http://127.0.0.1:%1/ (Press CTRL+C to quit)").arg(port);
+                    "QHttpServerExample", "(main)Running on http://192.168.0.48:%1/ (Press CTRL+C to quit)").arg(port);
 
 //test
 
