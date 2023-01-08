@@ -42,6 +42,8 @@ private:
     Ui::Widget *ui;
     QTcpSocket *socket;
 
+    std::unique_ptr<QFile> file;
+
     bool fd_flag = false;
     bool send_flag = false;
     const int PORT_NUMBER = 1024;

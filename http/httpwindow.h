@@ -25,6 +25,7 @@ QT_END_NAMESPACE
 
 class IdNameBody;
 class TCPServerDlg;
+class FileTranferdlg;
 
 class ProgressDialog : public QProgressDialog {
     Q_OBJECT
@@ -90,6 +91,7 @@ private:
     bool httpRequestAborted = false;
 
     TCPServerDlg *tcpServer;
+    FileTranferdlg *fileTransfer;
 };
 
 #endif

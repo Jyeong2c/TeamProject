@@ -3,6 +3,7 @@
 
 #include "httpwindow.h"
 #include "tcpserverdlg.h"
+#include "filetranferdlg.h"
 #include "ui_authenticationdialog.h"
 
 #include <QtWidgets>
@@ -123,6 +124,9 @@ HttpWindow::HttpWindow(QWidget *parent)
     /*서버 다이얼로그 활성화*/
     tcpServer = new TCPServerDlg;
     tabWidget->addTab(tcpServer, "TCPServerDlg");
+
+//    fileTransfer = new FileTranferdlg;
+//    tabWidget->addTab(fileTransfer, "FileTrasferDlg");
     mainLayout->addWidget(tabWidget);
 }
 HttpWindow::~HttpWindow() = default;

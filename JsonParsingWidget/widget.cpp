@@ -1,6 +1,9 @@
 #include "widget.h"
 #include "ui_widget.h"
 
+#include <QDir>
+#include <QFileInfo>
+
 using namespace std;
 /*내일은 지정된 서버에서 파일을 보내는 방법을 강구 해봐함*/
 /*서버에서 JSON데이터를 사용하는데 ui로 데이터를 생성해보는 연구 필요*/
@@ -196,6 +199,7 @@ void Widget::on_SelectSend_clicked()
     }
 }
 
+
 /*정수를 배열로 바꾸는 함수 구현부*/
 QByteArray IntToArray(qint32 source)    //숫자가 4바이트인지를 확인하기 위해 qint32(signed int)자료형을 사용
 {
@@ -205,6 +209,7 @@ QByteArray IntToArray(qint32 source)    //숫자가 4바이트인지를 확인�
     data << source;
     return temp;
 }
+
 
 
 

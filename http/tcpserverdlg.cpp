@@ -53,6 +53,7 @@ void TCPServerDlg::disconnected()
     delete buffer;
     delete s;
 }
+
 void TCPServerDlg::readyRead()
 {
     QTcpSocket *socket = static_cast<QTcpSocket*>(sender());
