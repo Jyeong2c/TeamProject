@@ -12,8 +12,12 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
+<<<<<<< Updated upstream
     //클라이언트의 폴더에 있는 html또는 json형태의 데이터만 파싱가능 http://192.168.0.48:8001/test.html(x)
     ui->UrlLineEdit->setText(QString("D:/GitDesktop/TeamProject/JsonHttp/test.html"));
+=======
+    ui->UrlLineEdit->setText(QString("C:/QtGit/TeamProject/JsonHttp/test.html"));
+>>>>>>> Stashed changes
 
     /*D 드라이브에 다운로드된 HTML문서를 링킹*/
     QString Link = ui->UrlLineEdit->text().toUtf8();
@@ -23,7 +27,7 @@ Widget::Widget(QWidget *parent)
     qDebug("[%s] %s : %d", __FILE__, __FUNCTION__, __LINE__);
 
     /*해당 IP에 연결*/
-    fd_flag = connectToHost("127.0.0.1");       //localhost
+    fd_flag = connectToHost("192.168.0.48");       //localhost
 
     if(!fd_flag)
         ui->textBrowser->insertPlainText("Socket connect fail\n");
