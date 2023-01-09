@@ -33,9 +33,14 @@ Widget::Widget(QWidget *parent)
     ui->JsonPasingTable->clear();
     QTreeWidgetItem* header = new QTreeWidgetItem;
 
+    /*ID, Name, Gender, Age, phoneNumber, Address, date*/
     header->setText(0, "ID");
     header->setText(1, "Name");
-    header->setText(2, "Body");
+    header->setText(2, "Gender");
+    header->setText(3, "Age");
+    header->setText(4, "PhoneNumber");
+    header->setText(5, "Address");
+    header->setText(6, "Date");
 
     ui->JsonPasingTable->setHeaderItem(header);
 
@@ -322,6 +327,7 @@ void Widget::upDateServerProagress(){   // 파일 상태 최신화 슬롯
 
 void Widget::on_findFilebutton_clicked()
 {
-    QFileDialog::getOpenFileName(this);
+    QString fileUrl = QFileDialog::getOpenFileName(this);
+    ui->UrlLineEdit->text() = fileUrl;
 }
 
