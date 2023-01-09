@@ -65,13 +65,13 @@ void IdNameBody::CreateJson(const QString &path)
     IdNameBody obj4(4, "Han en zee", "female", "29", "010-8075-7593",
                     "Suwon", QDateTime::currentDateTime().toString());
     QJsonObject person4;
-    person3.insert("id", obj4.id);
-    person3.insert("name", obj4.name);
-    person3.insert("gender", obj4.gender);
-    person3.insert("age", obj4.age);
-    person3.insert("phoneNumber", obj4.phoneNumber);
-    person3.insert("address", obj4.address);
-    person3.insert("date", obj4.date);
+    person4.insert("id", obj4.id);
+    person4.insert("name", obj4.name);
+    person4.insert("gender", obj4.gender);
+    person4.insert("age", obj4.age);
+    person4.insert("phoneNumber", obj4.phoneNumber);
+    person4.insert("address", obj4.address);
+    person4.insert("date", obj4.date);
 
     QJsonObject content;
     content.insert( "P1", person1 );
