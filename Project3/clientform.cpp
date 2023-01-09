@@ -70,28 +70,28 @@ void ClientForm::loadData()                                   //파일 저장 �
 
         ui->clientTableView->setModel(queryModel);
 
-        if(clDB.open()){                                                 //조건문
-            query = new QSqlQuery(clDB);
-            //query 문을 이용하여 테이블 생성 및 PK 키 설정
-            query->exec("CREATE TABLE IF NOT EXISTS image(id INTEGER Primary Key,"
-                        "name VARCHAR(20) NOT NULL,gender VARCHAR(20), age VARCHAR(20),"
-                        "imageType VARCHAR(20),imagePath VARCHAR(20), date VARCHAR(20));");
+//        if(clDB.open()){                                                 //조건문
+//            query = new QSqlQuery(clDB);
+//            //query 문을 이용하여 테이블 생성 및 PK 키 설정
+//            query->exec("CREATE TABLE IF NOT EXISTS image(id INTEGER Primary Key,"
+//                        "name VARCHAR(20) NOT NULL,gender VARCHAR(20), age VARCHAR(20),"
+//                        "imageType VARCHAR(20),imagePath VARCHAR(20), date VARCHAR(20));");
 
-            queryModel = new QSqlTableModel(this, clDB);
-            queryModel->setTable("image");
-            queryModel->select();
+//            queryModel = new QSqlTableModel(this, clDB);
+//            queryModel->setTable("image");
+//            queryModel->select();
 
-            /*테이블 헤더 설정*/
-            queryModel->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
-            queryModel->setHeaderData(1, Qt::Horizontal, QObject::tr("Name"));
-            queryModel->setHeaderData(2, Qt::Horizontal, QObject::tr("Gender"));
-            queryModel->setHeaderData(3, Qt::Horizontal, QObject::tr("Age"));
-            queryModel->setHeaderData(4, Qt::Horizontal, QObject::tr("imageType"));
-            queryModel->setHeaderData(5, Qt::Horizontal, QObject::tr("imagePath"));
-            queryModel->setHeaderData(6, Qt::Horizontal, QObject::tr("date"));
+//            /*테이블 헤더 설정*/
+//            queryModel->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
+//            queryModel->setHeaderData(1, Qt::Horizontal, QObject::tr("Name"));
+//            queryModel->setHeaderData(2, Qt::Horizontal, QObject::tr("Gender"));
+//            queryModel->setHeaderData(3, Qt::Horizontal, QObject::tr("Age"));
+//            queryModel->setHeaderData(4, Qt::Horizontal, QObject::tr("imageType"));
+//            queryModel->setHeaderData(5, Qt::Horizontal, QObject::tr("imagePath"));
+//            queryModel->setHeaderData(6, Qt::Horizontal, QObject::tr("date"));
 
-            ui->imageTableView->setModel(queryModel);
-        }
+//            ui->imageTableView->setModel(queryModel);
+//        }
 
     }
 }
