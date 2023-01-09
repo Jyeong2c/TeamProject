@@ -39,6 +39,8 @@ public slots:
     bool connectToHost(QString host);
     bool writeData(QByteArray data);
 
+    void connectWidget();
+
     /*파일 수신 시작 및 상태 알림 슬롯*/
     void start();
     void acceptConnection();

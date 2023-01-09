@@ -51,7 +51,12 @@ Widget::Widget(QWidget *parent)
     ui->JsonPasingTable->header()->setCascadingSectionResizes(true);
 
     /*프로그래스 상태 및 수신 데이터 준비 상태 초기화*/
-    ui->pro
+    ui->receiverProgress->setValue(0);
+    totalBytes = 0;
+    byteReceived = 0;
+    fileNameSize = 0;
+
+    connectWidget();
 
     /*connectButton 누를 시 json 데이터를 파싱*/
     connect(ui->connectButton, &QPushButton::clicked, [=]{
@@ -133,6 +138,11 @@ Widget::~Widget()
     delete ui;
 }
 
+void Widget::connectWidget(){
+    connect(ui->standByReceiveButton, SIGNAL(clicked()), this, SLOT(start()));
+    connect(&fileReceiver, SIGNAL(newConnection()), this, SLOT(acceptConnection()));
+}
+
 bool Widget::connectToHost(QString host)
 {
     qDebug("[%s] %s : %d", __FILE__, __FUNCTION__, __LINE__);
@@ -211,15 +221,68 @@ QByteArray IntToArray(qint32 source)    //숫자가 4바이트인지를 확인�
 }
 
 void Widget::start(){                   // 파일 수신 준비 슬롯
-
+    ui->standByReceiveButton->setEnabled(false);
+    byteReceived = 0;
+    fileNameSize = 0;
+    fileReceiver.listen(QHostAddress::AnyIPv4, 8100);
+    ui->recevierStatusLabel->setText(QStringLiteral("stand by receiving...."));
 }
 
 void Widget::acceptConnection(){        // 파일 전송 클라이언트 연결 슬롯
-
+    /* nextPendingConnection :
+      보류 중인 다음 연결을 연결된 QTcpSocket 개체로 반환합니다.
+      소켓은 서버의 자식으로 생성됩니다.
+      즉, QTcpServer 개체가 제거되면 소켓이 자동으로 삭제됩니다.
+      메모리 낭비를 방지하기 위해 개체 작업을 완료한 후에는 개체를
+      명시적으로 삭제하는 것이 좋습니다.*/
+    tcpServerConnection = fileReceiver.nextPendingConnection();
+    connect(tcpServerConnection, SIGNAL(readyRead()), this, SLOT(upDateServerProagress()));
+    ui->recevierStatusLabel->setText(QStringLiteral("receive Connect!!"));
+    fileReceiver.close();
 }
 
 void Widget::upDateServerProagress(){   // 파일 상태 최신화 슬롯
+    QDataStream in(tcpServerConnection);
+    in.setVersion(QDataStream::Qt_4_6);
 
+    /*받는 파일 용량을 검사 하고 그 상태를 프로그래스 바와 status 텍스트에 출력*/
+    if(byteReceived <= sizeof(qint64) * 2){
+        if(fileNameSize == 0 && tcpServerConnection->bytesAvailable() >= sizeof(qint64) * 2){
+            in >> totalBytes >> fileNameSize;
+            byteReceived += sizeof(qint64) * 2;
+        }
+        if(fileNameSize != 0 && tcpServerConnection->bytesAvailable() >= fileNameSize){
+            in >> fileName;
+            byteReceived += fileNameSize;
+            localFile = new QFile(fileName);
+            if(!localFile->open(QFile::WriteOnly)){
+                QMessageBox::warning(this, QStringLiteral("Server"),
+                                     QStringLiteral("Can't open this file")
+                                     .arg(fileName).arg(localFile->errorString()));
+                return;
+            }
+        }
+        else return;
+    }
+
+    if(byteReceived < totalBytes){
+        byteReceived += tcpServerConnection->bytesAvailable();
+        inBlock = tcpServerConnection->readAll();
+        localFile->write(inBlock);
+        inBlock.resize(0);
+    }
+
+    ui->receiverProgress->setMaximum(totalBytes);
+    ui->receiverProgress->setValue(byteReceived);
+    ui->recevierStatusLabel->setText(QStringLiteral("receive Data(%1) bytes")
+                                     .arg(byteReceived));
+    if(byteReceived == totalBytes){
+        tcpServerConnection->close();
+        ui->standByReceiveButton->setEnabled(true);
+        localFile->close();
+        start();
+        //update
+    }
 }
 
 
