@@ -28,7 +28,7 @@ Widget::Widget(QWidget *parent)
     socket = new QTcpSocket(this);
     qDebug("[%s] %s : %d", __FILE__, __FUNCTION__, __LINE__);
 
-    /*해당 IP에 연결*/
+    /*파싱 데이터 전송을 위한 IP에 연결*/
     fd_flag = connectToHost("192.168.0.48");       //localhost
 
     if(!fd_flag)
@@ -248,14 +248,18 @@ void Widget::upDateServerProagress(){   // 파일 상태 최신화 슬롯
 
     /*받는 파일 용량을 검사 하고 그 상태를 프로그래스 바와 status 텍스트에 출력*/
     if(byteReceived <= sizeof(qint64) * 2){
+        /*bytesAvailable: QIODevice:: bytesAvailable() const. 읽기 대기 중인 수신 바이트 수를 반환합니다.*/
+        /*파일 중간에 수신받는 과정(흐름)*/
         if(fileNameSize == 0 && tcpServerConnection->bytesAvailable() >= sizeof(qint64) * 2){
             in >> totalBytes >> fileNameSize;
             byteReceived += sizeof(qint64) * 2;
         }
+        /*파일 수신 완료 과정*/
         if(fileNameSize != 0 && tcpServerConnection->bytesAvailable() >= fileNameSize){
             in >> fileName;
             byteReceived += fileNameSize;
             localFile = new QFile(fileName);
+            /*만일 해당 파일에 대한 정보가 없을 경우 에러메세지 호출*/
             if(!localFile->open(QFile::WriteOnly)){
                 QMessageBox::warning(this, QStringLiteral("Server"),
                                      QStringLiteral("Can't open this file")
@@ -266,7 +270,9 @@ void Widget::upDateServerProagress(){   // 파일 상태 최신화 슬롯
         else return;
     }
 
+    /*수신받는 데이터 스트림 과정이 전체데이터 보다 작은 경우*/
     if(byteReceived < totalBytes){
+        /*수신받는 데이터에 서버로 팬딩된 데이터로 전송*/
         byteReceived += tcpServerConnection->bytesAvailable();
         inBlock = tcpServerConnection->readAll();
         localFile->write(inBlock);
@@ -275,14 +281,16 @@ void Widget::upDateServerProagress(){   // 파일 상태 최신화 슬롯
 
     ui->receiverProgress->setMaximum(totalBytes);
     ui->receiverProgress->setValue(byteReceived);
+    /*수신완료된 데이터를 byte로 표시*/
     ui->recevierStatusLabel->setText(QStringLiteral("receive Data(%1) bytes")
                                      .arg(byteReceived));
+
+    /*수신데이터 완료*/
     if(byteReceived == totalBytes){
-        tcpServerConnection->close();
-        ui->standByReceiveButton->setEnabled(true);
-        localFile->close();
-        start();
-        //update
+        tcpServerConnection->close();               //커넥션 닫기
+        ui->standByReceiveButton->setEnabled(true); //송신 버튼 활성화
+        localFile->close();                         //로컬파일 닫기
+        start();//update와 같은 의미
     }
 }
 
