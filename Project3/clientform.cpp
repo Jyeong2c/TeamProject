@@ -8,6 +8,7 @@
 #include <QSqlTableModel>
 #include <QDateTime>
 #include <QMenu>
+#include <QSqlRelationalTableModel>
 
 ClientForm::ClientForm(QWidget *parent) :
     QWidget(parent),
@@ -81,6 +82,11 @@ void ClientForm::loadData()                                   //파일 저장 �
             queryModel->setTable("image");
             queryModel->select();
 
+
+            modelMain = new QSqlRelationalTableModel(this);
+            modelMain->setTable("imageTable");
+            modelMain->setRelation(5, QSqlRelation("imageType", "id", "name"));
+
             /*테이블 헤더 설정*/
             queryModel->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
             queryModel->setHeaderData(1, Qt::Horizontal, QObject::tr("Name"));
@@ -90,13 +96,39 @@ void ClientForm::loadData()                                   //파일 저장 �
             queryModel->setHeaderData(5, Qt::Horizontal, QObject::tr("imagePath"));
             queryModel->setHeaderData(6, Qt::Horizontal, QObject::tr("date"));
 
+            createRelationalTable();
             ui->imageTableView->setModel(queryModel);
+
+
+//            modelMain->setRelation(4, QSqlRelation(imageDB, "id", DEVICE\_IP));
+
         }
 
     }
 }
 
+void ClientForm::createRelationalTable()
+{
+//    QSqlQuery query;
+    query->exec("CREATE TABLE IF NOT EXISTS image(id INTEGER Primary Key,"
+                "name VARCHAR(20) NOT NULL,gender VARCHAR(20), age VARCHAR(20),"
+                "imageType VARCHAR(20),imagePath VARCHAR(20), date VARCHAR(20));");
 
+
+    query->exec("insert into image values(1, '조재영', 'male', '1997-02-02','100','abc','date')");
+    query->exec("insert into image values(2, '한은지', 'female', '1997-02-02','5000','abc','date')");
+//    query->exec("insert into image values(3, 'Sam', 100, 1)");
+
+    query->exec("create table imageType(id varchar(20), name varchar(20))");
+    query->exec("insert into imageType values('100', 'CT')");
+    query->exec("insert into imageType values('5000', 'Scaner')");
+    query->exec("insert into imageType values('80000', 'X-ray')");
+
+//    query->exec("create table country(id int, name varchar(20))");
+//    query->exec("insert into country values(1, 'USA')");
+//    query->exec("insert into country values(47, 'Norway')");
+//    query->exec("insert into country values(49, 'Germany')");
+}
 void ClientForm::showContextMenu(const QPoint &pos)           //마우스 위치 설정
 {
     QPoint globalPos = ui->clientTableView->mapToGlobal(pos);        //TableView에 마우스 설정

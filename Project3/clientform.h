@@ -5,6 +5,7 @@
 
 class QSqlQuery;
 class QSqlTableModel;
+class QSqlRelationalTableModel;
 
 namespace Ui {
 class ClientForm;
@@ -38,6 +39,9 @@ private:
     int makeId();
     QMenu * menu;
     void clearText();
+    QSqlRelationalTableModel    *modelMain;
+    void createRelationalTable();
+//    QSqlRelationalTableModel    *modelDevice;
 
 
 };
