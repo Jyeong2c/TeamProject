@@ -15,12 +15,12 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);
-<<<<<<< Updated upstream
+
     //클라이언트의 폴더에 있는 html또는 json형태의 데이터만 파싱가능 http://192.168.0.48:8001/test.html(x)
     ui->UrlLineEdit->setText(QString("D:/GitDesktop/TeamProject/JsonHttp/test.html"));
-=======
+
     ui->UrlLineEdit->setText(QString("C:/QtGit/TeamProject/JsonHttp/test.html"));
->>>>>>> Stashed changes
+
 
     /*D 드라이브에 다운로드된 HTML문서를 링킹*/
     QString Link = ui->UrlLineEdit->text().toUtf8();
@@ -36,13 +36,6 @@ Widget::Widget(QWidget *parent)
         ui->textBrowser->insertPlainText("Socket connect fail\n");
 
 
-    /*ID, NAME, BODY데이터를 보내는 버튼 커넥트 함수*/
-//    connect(ui->IDButton, SIGNAL(clicked()), this, SLOT(on_IDButton_clicked()));
-//    connect(ui->NameButton, SIGNAL(clicked()), this, SLOT(on_NameButton_clicked()));
-//    connect(ui->BodyButton, SIGNAL(clicked()), this, SLOT(on_BodyButton_clicked()));
-
-
-
     /*JsonParsingTable 초기화 이후 ID, Name, Body 헤더 표시*/
     ui->JsonPasingTable->clear();
     QTreeWidgetItem* header = new QTreeWidgetItem;
@@ -56,6 +49,9 @@ Widget::Widget(QWidget *parent)
     /*TreeView column 조정 중*/
     ui->JsonPasingTable->header()->setStretchLastSection(true);
     ui->JsonPasingTable->header()->setCascadingSectionResizes(true);
+
+    /*프로그래스 상태 및 수신 데이터 준비 상태 초기화*/
+    ui->pro
 
     /*connectButton 누를 시 json 데이터를 파싱*/
     connect(ui->connectButton, &QPushButton::clicked, [=]{
@@ -184,8 +180,8 @@ void Widget::on_SelectSend_clicked()
 
     if(fd_flag)
     {
-//        QString status = QString("Processing file %1 of %2: %3")
-//                        .arg(i).arg(total).arg(fileName);@
+        //        QString status = QString("Processing file %1 of %2: %3")
+        //                        .arg(i).arg(total).arg(fileName);@
         QString textData, sendData;
         textData = QString("Button click : %1, %2, %3, %4\n").arg(cnt).arg(ID).arg(Name).arg(Body);
         sendData = QString("Socket data : %1, %2, %3, %4\n").arg(cnt).arg(ID).arg(Name).arg(Body);
@@ -212,6 +208,18 @@ QByteArray IntToArray(qint32 source)    //숫자가 4바이트인지를 확인�
     QDataStream data(&temp, QIODevice::ReadWrite);
     data << source;
     return temp;
+}
+
+void Widget::start(){                   // 파일 수신 준비 슬롯
+
+}
+
+void Widget::acceptConnection(){        // 파일 전송 클라이언트 연결 슬롯
+
+}
+
+void Widget::upDateServerProagress(){   // 파일 상태 최신화 슬롯
+
 }
 
 
