@@ -327,7 +327,8 @@ void Widget::upDateServerProagress(){   // 파일 상태 최신화 슬롯
 
 void Widget::on_findFilebutton_clicked()
 {
-    QString fileUrl = QFileDialog::getOpenFileName(this);
-    ui->UrlLineEdit->text() = fileUrl;
+    fileName = QFileDialog::getOpenFileName(this);
+    /*파일을 준비하면 전송 버튼 활성화*/
+    if(!fileName.isEmpty()) ui->UrlLineEdit->setText(fileName);
 }
 
