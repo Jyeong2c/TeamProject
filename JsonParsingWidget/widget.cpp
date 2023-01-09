@@ -100,20 +100,42 @@ Widget::Widget(QWidget *parent)
 
                         }
 #else
+//                        person1.insert("id", obj1.id);
+//                        person1.insert("name", obj1.name);
+//                        person1.insert("gender", obj1.gender);
+//                        person1.insert("age", obj1.age);
+//                        person1.insert("phoneNumber", obj1.phoneNumber);
+//                        person1.insert("address", obj1.address);
+//                        person1.insert("date", obj1.date);
+
+
+                        /*ID, Name, Gender, Age, phoneNumber, Address, date*/
                         qDebug() << "ID:" << obj["id"].toInt();
                         qDebug( ) << "Name:" << obj["name"].toString( );
-                        qDebug( ) << "Body:" << obj["body"].toString( );
+                        qDebug( ) << "Gender:" << obj["gender"].toString( );
+                        qDebug( ) << "Age:" << obj["age"].toString( );
+                        qDebug( ) << "phoneNumber:" << obj["phoneNumber"].toString( );
+                        qDebug( ) << "Address:" << obj["address"].toString( );
+                        qDebug( ) << "date:" << obj["date"].toString( );
 
                         int id = obj["id"].toInt();
                         QString name = obj["name"].toString( );
-                        QString body = obj["body"].toString( );
+                        QString gender = obj["gender"].toString( );
+                        QString age = obj["age"].toString( );
+                        QString phone = obj["phoneNumber"].toString( );
+                        QString address = obj["address"].toString( );
+                        QString date = obj["date"].toString( );
 
                         //TreeWidgetItem Header
 
                         QTreeWidgetItem* subItem = new QTreeWidgetItem;
                         subItem->setText(0, QString::number(id));
                         subItem->setText(1, name);
-                        subItem->setText(2, body);
+                        subItem->setText(2, gender);
+                        subItem->setText(3, age);
+                        subItem->setText(4, phone);
+                        subItem->setText(5, address);
+                        subItem->setText(6, date);
                         ui->JsonPasingTable->addTopLevelItem(subItem);
 #endif
                     }
@@ -178,13 +200,13 @@ void Widget::on_SelectSend_clicked()
     {
         ui->JsonPasingTable->topLevelItem(ui->JsonPasingTable->topLevelItemCount() - 1)->setSelected(true);
     }
-    qDebug() << ui->JsonPasingTable->currentItem()->data(0,0);
     qDebug() << ui->JsonPasingTable->currentItem()->data(1,0);
-    qDebug() << ui->JsonPasingTable->currentItem()->data(2,0);
+    qDebug() << ui->JsonPasingTable->currentItem()->data(3,0);
+    qDebug() << ui->JsonPasingTable->currentItem()->data(5,0);
 
-    QString ID = ui->JsonPasingTable->currentItem()->data(0,0).toString();
-    QString Name = ui->JsonPasingTable->currentItem()->data(1,0).toString();
-    QString Body = ui->JsonPasingTable->currentItem()->data(2,0).toString();
+    QString ID = ui->JsonPasingTable->currentItem()->data(1,0).toString();
+    QString Name = ui->JsonPasingTable->currentItem()->data(3,0).toString();
+    QString Body = ui->JsonPasingTable->currentItem()->data(5,0).toString();
 
     if(fd_flag)
     {

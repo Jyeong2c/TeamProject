@@ -13,16 +13,22 @@ class IdNameBody
 {
 public:
     /*일반 생성자*/
-    IdNameBody(int = 0, QString = "", QString = "");
+    IdNameBody(int = 0, QString = "", QString = "", QString = "",
+               QString = "", QString = "", QString = "");
 
     /*Json파일을 생성하기 위한 함수*/
     void CreateJson(const QString &);
 
 private:
     /*Json 데이터로 선언되는 멤버함수 : ID, 이름, 내용*/
+    /*ID, Name, Gender, Age, phoneNumber, Address, date*/
     int id;
     QString name;
-    QString body;
+    QString gender;
+    QString age;
+    QString phoneNumber;
+    QString address;
+    QString date;
 };
 
 #endif // IDNAMEBODY_H
