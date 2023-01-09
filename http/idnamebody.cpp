@@ -10,7 +10,7 @@ IdNameBody::IdNameBody(int _id, QString _name, QString _body)
     body = _body;
 }
 
-//명시적으로 작성한 Json 인코딩 함수 (비효율적)
+/*명시적으로 작성한 Json 인코딩 함수 (비효율적)*/
 void IdNameBody::CreateJson(const QString &path)
 {
     IdNameBody obj1(1, "jeong jae hyeon", "He is Team Leader");
