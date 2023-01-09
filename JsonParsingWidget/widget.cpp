@@ -285,7 +285,8 @@ void Widget::upDateServerProagress(){   // 파일 상태 최신화 슬롯
     }
 }
 
-
-
-
+void Widget::on_findFilebutton_clicked()
+{
+    QFileDialog::getOpenFileName(this);
+}
 

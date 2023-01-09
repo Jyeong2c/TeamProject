@@ -49,6 +49,8 @@ public slots:
 private slots:
     void on_SelectSend_clicked();
 
+    void on_findFilebutton_clicked();
+
 private:
     Ui::Widget *ui;
     QTcpSocket *socket;
