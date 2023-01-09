@@ -204,17 +204,24 @@ void Widget::on_SelectSend_clicked()
     qDebug() << ui->JsonPasingTable->currentItem()->data(3,0);
     qDebug() << ui->JsonPasingTable->currentItem()->data(5,0);
 
-    QString ID = ui->JsonPasingTable->currentItem()->data(1,0).toString();
-    QString Name = ui->JsonPasingTable->currentItem()->data(3,0).toString();
-    QString Body = ui->JsonPasingTable->currentItem()->data(5,0).toString();
+    /*ID, Name, Gender, Age, phoneNumber, Address, date*/
+    QString id = ui->JsonPasingTable->currentItem()->data(0,0).toString();
+    QString name = ui->JsonPasingTable->currentItem()->data(1,0).toString();
+    QString gender = ui->JsonPasingTable->currentItem()->data(2,0).toString();
+    QString age = ui->JsonPasingTable->currentItem()->data(3,0).toString();
+    QString phone = ui->JsonPasingTable->currentItem()->data(4,0).toString();
+    QString address = ui->JsonPasingTable->currentItem()->data(5,0).toString();
+    QString date = ui->JsonPasingTable->currentItem()->data(6,0).toString();
 
     if(fd_flag)
     {
         //        QString status = QString("Processing file %1 of %2: %3")
         //                        .arg(i).arg(total).arg(fileName);@
         QString textData, sendData;
-        textData = QString("Button click : %1, %2, %3, %4\n").arg(cnt).arg(ID).arg(Name).arg(Body);
-        sendData = QString("Socket data : %1, %2, %3, %4\n").arg(cnt).arg(ID).arg(Name).arg(Body);
+        textData = QString("Button click : %1, %2, %3, %4, %5, %6, %7, %8\n")
+                .arg(cnt).arg(id).arg(name).arg(gender).arg(age).arg(phone).arg(address).arg(date);
+        sendData = QString("Socket data : %1, %2, %3, %4, %5, %6, %7, %8\n")
+                .arg(cnt).arg(id).arg(name).arg(gender).arg(age).arg(phone).arg(address).arg(date);
         //textData = QString("(textData) ID Data : %1\n").arg(index);
         //sendData = QString("(sendData) ID Data : %1\n").arg(index);
 
