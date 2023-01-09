@@ -69,8 +69,31 @@ void ClientForm::loadData()                                   //파일 저장 �
         queryModel->setHeaderData(6, Qt::Horizontal, QObject::tr("date"));
 
         ui->clientTableView->setModel(queryModel);
-    }
 
+        if(clDB.open()){                                                 //조건문
+            query = new QSqlQuery(clDB);
+            //query 문을 이용하여 테이블 생성 및 PK 키 설정
+            query->exec("CREATE TABLE IF NOT EXISTS image(id INTEGER Primary Key,"
+                        "name VARCHAR(20) NOT NULL,gender VARCHAR(20), age VARCHAR(20),"
+                        "imageType VARCHAR(20),imagePath VARCHAR(20), date VARCHAR(20));");
+
+            queryModel = new QSqlTableModel(this, clDB);
+            queryModel->setTable("image");
+            queryModel->select();
+
+            /*테이블 헤더 설정*/
+            queryModel->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
+            queryModel->setHeaderData(1, Qt::Horizontal, QObject::tr("Name"));
+            queryModel->setHeaderData(2, Qt::Horizontal, QObject::tr("Gender"));
+            queryModel->setHeaderData(3, Qt::Horizontal, QObject::tr("Age"));
+            queryModel->setHeaderData(4, Qt::Horizontal, QObject::tr("imageType"));
+            queryModel->setHeaderData(5, Qt::Horizontal, QObject::tr("imagePath"));
+            queryModel->setHeaderData(6, Qt::Horizontal, QObject::tr("date"));
+
+            ui->imageTableView->setModel(queryModel);
+        }
+
+    }
 }
 
 
@@ -97,7 +120,7 @@ void ClientForm::on_addPushButton_clicked()
     QString name, number, address,gender,age,date;
     int id = makeId( );                                              //설정한 id값을 id에 대입
     name = ui->nameLineEdit->text();
-    gender = ui->genderLineEdit->text();
+    gender = ui->genderComboBox->currentText();
     age = ui->ageLineEdit->text();
     number = ui->phoneNumberLineEdit->text();                        //입력한 값을 number에 대입
     address = ui->addressLineEdit->text();                           //입력한 값을 address에 대입
@@ -125,7 +148,7 @@ void ClientForm::on_modifyPushButton_clicked()
         int id;
         id = ui->idLineEdit->text().toInt();
         name = ui->nameLineEdit->text();                             //LineEdit에 있는 정보를 name에 대입
-        gender = ui->genderLineEdit->text();
+        gender = ui->genderComboBox->currentText();
         age = ui->ageLineEdit->text();
         number = ui->phoneNumberLineEdit->text();                    //LineEdit에 있는 정보를 number에 대입
         address = ui->addressLineEdit->text();                       //LineEdit에 있는 정보를 address에 대입
@@ -200,8 +223,10 @@ void ClientForm::on_clientTableView_clicked(const QModelIndex &index)
 
     ui->idLineEdit->setText(QString::number(id));
     ui->nameLineEdit->setText(name);                                 //선택한 정보를 lineEdit에 보여줍니다
-    ui->genderLineEdit->setText(gender);
+    ui->genderComboBox->setCurrentText(gender);
     ui->ageLineEdit->setText(age);
+    //    ui->ageDateEdit->sectionText(age);
+    //    ui->ageDateEdit->setDate(QDate::fromString(age));
     ui->phoneNumberLineEdit->setText(phoneNumber);                   //선택한 정보를 lineEdit에 보여줍니다
     ui->addressLineEdit->setText(address);                           //선택한 정보를 lineEdit에 보여줍니다
 }
@@ -210,7 +235,7 @@ void ClientForm::clearText()
 {
     ui->idLineEdit->clear();
     ui->nameLineEdit->clear();                             //LineEdit에 있는 정보를 name에 대입
-    ui->genderLineEdit->clear();
+    ui->genderComboBox->clearEditText();
     ui->ageLineEdit->clear();
     ui->phoneNumberLineEdit->clear();                   //LineEdit에 있는 정보를 number에 대입
     ui->addressLineEdit->clear();                  //LineEdit에 있는 정보를 address에 대입
