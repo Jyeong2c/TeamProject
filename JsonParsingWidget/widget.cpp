@@ -23,7 +23,7 @@ Widget::Widget(QWidget *parent)
     qDebug("[%s] %s : %d", __FILE__, __FUNCTION__, __LINE__);
 
     /*파싱 데이터 전송을 위한 IP에 연결*/
-    fd_flag = connectToHost("192.168.0.48");       //localhost
+    fd_flag = connectToHost("169..2.91");       //localhost
 
     if(!fd_flag)
         ui->textBrowser->insertPlainText("Socket connect fail\n");
@@ -156,6 +156,8 @@ Widget::Widget(QWidget *parent)
             }
         }
     });
+    //ui->JsonPasingTable->resizeColumnToContents(0);
+    //ui->JsonPasingTable->horizontalHeader()->setStrecthLastSection(true);
 }
 
 Widget::~Widget()
@@ -252,6 +254,10 @@ QByteArray IntToArray(qint32 source)    //숫자가 4바이트인지를 확인�
     return temp;
 }
 
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/*텍스트파일, 이미지파일을 보내는 포트와 */
 void Widget::start(){                   // 파일 수신 준비 슬롯
     ui->standByReceiveButton->setEnabled(false);
     byteReceived = 0;

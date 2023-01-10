@@ -18,7 +18,7 @@ const int PORT_NUMBER = 8000;
 
 #if QT_CONFIG(ssl)
 /*오픈할 서버의 포트는 8001번 이므로 원래 포트번호에 +1을 하여 서버주소를 맞춤*/
-QString defaultUrl = "http://192.168.0.48:" + QString::number(PORT_NUMBER + 1);
+QString defaultUrl = "http://192.168.56.1:" + QString::number(PORT_NUMBER + 1);
 #else
 const char defaultUrl[] = "http://www.qt.io/";
 #endif
