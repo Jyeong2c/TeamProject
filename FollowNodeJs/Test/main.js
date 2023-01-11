@@ -61,15 +61,15 @@ app.get('/patient/P2/picture', function(req, res){
 
 
 app.get('/patient/P2/picture/panorama', function(req, res){
-    fs.readFile('main.html', function(error, data){
+    fs.readFile('main1.html', function(error, data){
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.end(data);
     });
 });
 
 //환자 2의 이미지 페이지 라우팅
-app.get('/picture', function(req, res){
-    fs.readFile('./picture/Naver.png', function(error, data){
+app.get('/picture1', function(req, res){
+    fs.readFile('./picture1/Naver.png', function(error, data){
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.end(data);
         console.log(":patient/2/panorama");
