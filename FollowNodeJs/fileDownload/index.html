@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <!--script src = "http://code.jqurey.com/jqurey-1.7.1.js"></script-->
+    </head>
+
+    <body>
+        <div>
+            <input type="text" id="txt"/>
+            <input type="button" value="fileDown" id="btn" onclick="getFileDown()"/>
+        </div>
+
+        <script>
+            window.onload = function(){
+
+            }
+            function getFileDown(){
+                var txt = document.getElementById("txt");
+                alert(txt.value);
+                window.location = '/download/' + txt.value;
+            }
+        </script>
+    </body>
+</html>
