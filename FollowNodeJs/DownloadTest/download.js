@@ -4,7 +4,6 @@ var router = express.Router();
 var fs = require('fs');
 var path = require('path');
 var mime = require('mime');
-const { Router } = require('express');
 
 router.get('D:/GitDesktop/TeamProject/FollowNodeJs/Routing/Images/google.png', function(req, res, next){
     var upload_folder = 'D:/GitDesktop/TeamProject/FollowNodeJs/DownloadTest/router';
