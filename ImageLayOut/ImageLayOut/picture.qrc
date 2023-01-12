@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>image/leftRotate.png</file>
+        <file>image/rightRotate.png</file>
+        <file>image/zoomIn.jpg</file>
+        <file>image/zoomOut2.jpg</file>
+    </qresource>
+</RCC>

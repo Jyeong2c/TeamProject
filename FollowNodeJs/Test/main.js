@@ -11,7 +11,7 @@ app.get('/patient', function(req, res){
 });
 
 // 환자 정보 1
-app.get('/patient/P1', function(req, res){
+app.get('/patient/1', function(req, res){
     res.json(
         {
             id : 1,
@@ -21,12 +21,12 @@ app.get('/patient/P1', function(req, res){
         });
 });
 
-app.get('/patient/P1/picture', function(req, res){
+app.get('/patient/1/picture', function(req, res){
     res.send("this is patient 1 picture page");
 });
 
 
-app.get('/patient/P1/picture/panorama', function(req, res){
+app.get('/patient/1/picture/panorama', function(req, res){
     fs.readFile('main.html', function(error, data){
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.end(data);
@@ -43,9 +43,8 @@ app.get('/picture', function(req, res){
 });
 
 
-
 // 환자 정보 2
-app.get('/patient/P2', function(req, res){
+app.get('/patient/2', function(req, res){
     res.json(
         {
             id : 2,
@@ -55,12 +54,12 @@ app.get('/patient/P2', function(req, res){
         });
 });
 
-app.get('/patient/P2/picture', function(req, res){
+app.get('/patient/2/picture', function(req, res){
     res.send("this is patient 2 picture page");
 });
 
 
-app.get('/patient/P2/picture/panorama', function(req, res){
+app.get('/patient/2/picture/panorama', function(req, res){
     fs.readFile('main1.html', function(error, data){
         res.writeHead(200, {'Content-Type': 'text/html'});
         res.end(data);
